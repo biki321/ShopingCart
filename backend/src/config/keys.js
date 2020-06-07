@@ -1,4 +1,4 @@
 module.exports = {
-    MongoUrl: "mongodb://localhost/shoppingUsersAuth",
+    MongoUrl: "mongodb://localhost:27017/shopping",
     
 }

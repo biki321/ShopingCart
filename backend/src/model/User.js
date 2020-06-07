@@ -1,7 +1,8 @@
 const mongoose  = require('mongoose')
-const bcrypt = require('bcryptjs')
 
-const userSchema = new mongoose.Schema({
+let collectionName = 'users';
+
+const user_schema = new mongoose.Schema({
     name: {
         type : String,
         required: true,
@@ -24,7 +25,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {collection: collectionName});
 
 // userSchema.pre('save', function(next){
 //     var user = this;
@@ -43,4 +44,4 @@ const userSchema = new mongoose.Schema({
 //     }else {next()}
 // });
 
-module.exports = mongoose.model( 'User', userSchema );
+module.exports = mongoose.model( 'users', user_schema , collectionName);

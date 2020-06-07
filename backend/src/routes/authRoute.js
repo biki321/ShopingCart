@@ -4,24 +4,19 @@ const Joi = require('@hapi/joi')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { registerValidation, loginValidation } = require('../helper/validation')
+const createCartEventEmitter = require('../events/createCart');
 
 //REGISTRATION
 router.post('/register', async (req, res) => {
 
-    //validation of datalike email  password
-    console.log('val check')
+    //validation of datalike email  password   
     const { error } = registerValidation(req.body);
-    console.log('val check done')
-    console.log(error)
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).json({ err: error.details[0].message });
 
     //check if given email already exist 
-    console.log('findone')
     const emailExist = await User.findOne({ email: req.body.email });
-    console.log('findone done')
-    if (emailExist) return res.status(400).send('Email already exist');
+    if (emailExist) return res.status(400).json({ err: 'Email already exist' });
 
-    console.log('User')
     const user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -39,8 +34,16 @@ router.post('/register', async (req, res) => {
             //save user to database
             user.save()
                 .then(user => {
-                    res.status(200).json({ user_id: user._id });
-                }).catch(err => res.status(400).send(err));
+                    res.status(200).json({ success: 'SignedUp Successfully' });  
+                    
+                    //this emitter will emit event to create a cart for user_id
+                    createCartEventEmitter.emit('createCart', user._id);                
+
+                }).catch((err) => {
+                    res.status(400).json({ err: 'Some Problem' });
+                    throw err;
+                }
+                );
         });
     });
 })
@@ -52,18 +55,26 @@ router.post('/login', async (req, res, next) => {
     // if (error) return res.status(400).send(error.details[0].message);
 
     //check if user exist
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send('Email is wrong');
+    try {        
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) return res.status(400).json({ err: 'Email is wrong' });
 
-    //compare user entered password and password from 'user.password from database'   
-    bcrypt.compare(req.body.password, user.password).then(result => {
-        console.log(result);
-        if (!result) return res.status(400).end("Invalid Password");
-    }).catch(err => { throw err; });
+        //matching password
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (match) {                  
+            const token = jwt.sign({ user_id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '15d' });            
+            return res.status(200).header('jwt', token).json({ success: 'Logined In' });
 
-    //create and assign a token
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {expiresIn: '15d'});
-    res.send(token);
+        } else {
+            res.status(400).json({ err: "Wrong password" });
+        }
+    } catch{
+        error => {
+            throw error;
+        }
+    }
+
+
 
 });
 
@@ -71,23 +82,21 @@ router.delete('/delete', (req, res, next) => {
     User.deleteMany({}, (err, result) => {
         if (err) {
             console.log(err); res.end({});
-            res.end({ result: result });
-        }
-
-    });
+        }});
     console.log('deleted');
+    res.end({ result: result });
 });
 
-router.get('/data', function(req, res) {
+router.get('/data', function (req, res) {
     var str = req.get('Authorization');
     try {
-      jwt.verify(str, process.env.TOKEN_SECRET);
-      res.send("Very Secret Data");
+        jwt.verify(str, process.env.TOKEN_SECRET);
+        res.send("Very Secret Data");
     } catch {
-      res.status(401);
-      res.send("Bad Token");
+        res.status(401);
+        res.send("Bad Token");
     }
-  
-  });
+
+});
 
 module.exports = router;
