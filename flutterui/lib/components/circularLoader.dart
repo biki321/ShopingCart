@@ -8,7 +8,7 @@ class CircularLoader extends StatelessWidget {
         width: 33,
         height: 33,
         child: CircularProgressIndicator(
-          backgroundColor: Colors.orangeAccent,          
+          //backgroundColor: Colors.orangeAccent,          
           strokeWidth: 5.0,
         ),
       ),
