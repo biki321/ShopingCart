@@ -1,23 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutterui/model/products/productsModel.dart';
 import 'package:flutterui/screens/product_details_page.dart';
 
 class ProductCard extends StatelessWidget {
-  final Color color;
-  final String name;
-  final String price;
-  final String path;
-  final bool instock;
-  final String brand_name;
-
-  const ProductCard(
-      {Key key,
-      @required this.color,
-      @required this.name,
-      @required this.price,
-      @required this.path, 
-      @required this.instock, 
-      @required this.brand_name})
-      : super(key: key);
+  final Product product;
+  const ProductCard({Key key, this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +14,13 @@ class ProductCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductDetails(
-                      color: color,
-                      name: name,
-                      path: path,
-                      price: price,
-                      instock: instock,
-                      brand_name:brand_name,
+                      id: product.id,
+                      color: Color.fromARGB(150, 159, 221, 251),
+                      path: product.differentColoredProduct[0].urlForImage,
+                      productBrand: product.productBrand,
+                      productName: product.productName,
+                      nestedId: product.differentColoredProduct[0].id,
+                      inStock: true,
                     )));
       },
       child: Card(
@@ -40,7 +28,8 @@ class ProductCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: color,
+        //color: Color.fromARGB(255, 207, 240, 255),
+        color: Color.fromARGB(255, 178, 250, 238),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.60,
           height: MediaQuery.of(context).size.height * 0.50,
@@ -54,7 +43,7 @@ class ProductCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                     child: Text(
-                      "${instock?'instock':'out of stock'}",
+                      'instock',
                       style: TextStyle(
                           color: Colors.blueAccent,
                           fontSize: 18,
@@ -70,7 +59,7 @@ class ProductCard extends StatelessWidget {
               Flexible(
                 child: Center(
                   child: Image.asset(
-                    path,
+                    product.differentColoredProduct[0].urlForImage,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -81,22 +70,39 @@ class ProductCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 27,
-                        fontWeight: FontWeight.w400,
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        '${product.productName ?? null}',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 27,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                    Text(
-                      "\$$price",
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 22,
-                        color: Colors.deepOrange,
-                        fontWeight: FontWeight.w300,
-                      ),
+                    RichText(
+                      maxLines: 1,
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: '\$',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 15,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${product.productPrice}',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 24,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ]),
                     ),
                   ],
                 ),
@@ -108,22 +114,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-
-List<Widget> list_of_product_card = [
-  ProductCard(
-      color: Color.fromARGB(150, 159, 221, 251),
-      name: 'Addidas Drago M',
-      brand_name:'Addidas',
-      price: '160',
-      instock: true,
-      path:
-          'assets/shoes/addidas/Drogo_M_Walking_Shoes_For_Men/shoes_black1.png'),
-  ProductCard(
-      color: Color.fromARGB(150, 113, 233, 212),
-      name: 'Fluo_M',
-      brand_name: 'Addidas',
-      price: '160',
-      instock: true,
-      path:
-          'assets/shoes/addidas/Fluo_M_Running_Shoe_For_Men/shoes_black2.png'),
-];

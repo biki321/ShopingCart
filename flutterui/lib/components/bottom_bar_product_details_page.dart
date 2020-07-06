@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterui/screens/payment_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterui/blocs/cart/cart_bloc.dart';
+import 'package:flutterui/blocs/item/item_bloc.dart';
 
 class BottomBarProductPage extends StatefulWidget {
   @override
@@ -7,6 +9,16 @@ class BottomBarProductPage extends StatefulWidget {
 }
 
 class _BottomBarProductPageState extends State<BottomBarProductPage> {
+  ItemBloc _itemBLoc;
+  CartBloc _cartBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemBLoc = BlocProvider.of<ItemBloc>(context);
+    _cartBloc = BlocProvider.of<CartBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -25,7 +37,14 @@ class _BottomBarProductPageState extends State<BottomBarProductPage> {
             Flexible(
               flex: 2,
               child: FlatButton(
-                  onPressed: null,
+                  onPressed: () {
+                    //this will trigger AddToCart event of CartBloc
+                    _cartBloc.add(AddToCart(
+                        nestedId: _itemBLoc.activeShoeNestedId,
+                        productId: _itemBLoc.productDetails.id,
+                        quantity: _itemBLoc.seletedQuantity,
+                        size: _itemBLoc.activeShoeSize.toInt()));
+                  },
                   child: Container(
                     height: 45,
                     decoration: BoxDecoration(
@@ -37,7 +56,7 @@ class _BottomBarProductPageState extends State<BottomBarProductPage> {
                         'Add to cart',
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
                       ),
@@ -47,31 +66,31 @@ class _BottomBarProductPageState extends State<BottomBarProductPage> {
             SizedBox(
               width: 10.0,
             ),
-            Flexible(
-              flex: 1,
-              child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => PaymentPage()));
-                  },
-                  child: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.deepOrange, width: 3.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Buy',
-                        style: TextStyle(
-                          color: Colors.deepOrange,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  )),
-            ),
+            // Flexible(
+            //   flex: 1,
+            //   child: FlatButton(
+            //       onPressed: () {
+            //         Navigator.of(context).push(
+            //             MaterialPageRoute(builder: (context) => PaymentPage()));
+            //       },
+            //       child: Container(
+            //         height: 45,
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(10.0),
+            //           border: Border.all(color: Colors.deepOrange, width: 2.0),
+            //         ),
+            //         child: Center(
+            //           child: Text(
+            //             'Buy',
+            //             style: TextStyle(
+            //               color: Colors.deepOrange,
+            //               fontWeight: FontWeight.normal,
+            //               fontSize: 15,
+            //             ),
+            //           ),
+            //         ),
+            //       )),
+            // ),
           ],
         ),
       ),

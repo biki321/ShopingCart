@@ -4,6 +4,7 @@ class SignupState {
   bool isvalidUserName;
   bool isvalidEmail;
   bool isvalidPassword;
+  bool isTryingToSignup;
   //this error will contains information about the error(if any)
   //after submitting the login details
   String error;
@@ -15,6 +16,7 @@ class SignupState {
     @required this.isvalidUserName,
     @required this.isvalidEmail,
     @required this.isvalidPassword,
+    @required this.isTryingToSignup,
     this.error,
     this.success,
   });
@@ -24,6 +26,7 @@ class SignupState {
       isvalidEmail: true,
       isvalidPassword: true,
       isvalidUserName: true,
+      isTryingToSignup: false,
       error: '',
       success: '',
     );
@@ -33,6 +36,7 @@ class SignupState {
     bool isvalidUserName,
     bool isvalidEmail,
     bool isvalidPassword,
+    bool isTryingToSignup,
     String error,
     String success,
   }) {
@@ -42,6 +46,7 @@ class SignupState {
       isvalidUserName: isvalidUserName ?? this.isvalidUserName,
       error: error ?? this.error,
       success: success ?? this.success,
+      isTryingToSignup: isTryingToSignup ?? this.isTryingToSignup,
     );
   }
 
@@ -52,6 +57,7 @@ class SignupState {
     isvallidPassword: $isvalidPassword,
     isvalidUserName: $isvalidUserName,
     isvalidForm: $isFormValid,
+    isTryingToSignup: $isTryingToSignup,
      error: $error,
     success: $success,
     ''';

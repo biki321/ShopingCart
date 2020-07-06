@@ -27,10 +27,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       bool p = isValidPassword(event._password);
       yield state.update(isvalidPassword: p, error: '');
     } else if (event is Submitting) {
-      print('subitting');
-
-      //yield state.update( istryingToLogIn: true );
-
+      yield state.update(success: '', error: '', istryingToLogIn: true);      
+            
       Response res = await attemptLogIn(event._email, event._password);
       print(res);
       if (res.statusCode == 400) {

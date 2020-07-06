@@ -144,5 +144,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+index_test.js
+test1.js
+
+#environment varialble(secrets)
+.env
 
 # End of https://www.gitignore.io/api/node,windows,visualstudiocode
