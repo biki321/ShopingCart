@@ -2,13 +2,15 @@
 ## Description: It is a shoppingcart app made for both Android and Ios with Flutter crossplatform framework and Node.Js as backend. It has features of a basic shoppingcart with a payment gateway integration.
 
 ## Technologies used:
-* ### Flutter for UI (It is cross platform framework for both Android and Ios).
-* ### Node.Js for backend.
-* ### Mongodb as database (Instead of mongdb driver mongoose is used).
-* ### Local host is used as server.
-* ### RazorPay is used as payment gateway.
+* ### Flutter for UI (It is cross platform framework for both Android and Ios)
+* ### Node.Js for backend
+* ### Mongodb as database (Instead of mongdb driver mongoose is used)
+* ### RazorPay is used as payment gateway
 * ### JWT is used for authentication
-* ### VS code as editor
+* ### bloc pattern is used in frontend
+* ### Local host is used as server
+
+
 
 ## Screenshots
 <img src="screenshots\cart1.jpg" width="400" height="720" />
